@@ -25,9 +25,9 @@ Backend API menggunakan Node.js, TypeScript, Express, dan Prisma untuk sistem an
 ## 📦 Installation
 
 ```bash
-# Clone repository
-git clone <https://github.com/simad9/bootcamp-berijalan.git>
-cd bootcamp-berijalan
+# Clone repository - git clone pada umumnya ya bang ^^
+git clone <https://github.com/simad9/bootcamp-berijalan_BE.git>
+cd bootcamp-berijalan_BE
 
 # Install dependencies
 npm install

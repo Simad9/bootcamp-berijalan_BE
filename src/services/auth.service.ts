@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { IGlobalResponse } from "../interfaces/global.interface";
-import { ILoginResponse } from "../interfaces/auth.interface";
+import { IGetAllResponse, ILoginResponse, IUpdateResponse } from "../interfaces/auth.interface";
+import { UGenerateToken } from "../utils/UGenerateToken";
 
 const prisma = new PrismaClient();
 
@@ -27,14 +28,12 @@ export const SLogin = async (
     throw Error("Invalid credentials");
   }
 
-  // const token = UGenerateToken({
-  //   id: admin.id,
-  //   username: admin.username,
-  //   email: admin.email,
-  //   name: admin.name,
-  // });
-
-  const token = "ini token test aja";
+  const token = UGenerateToken({
+    id: admin.id,
+    username: admin.username,
+    email: admin.email,
+    name: admin.name,
+  });
 
   return {
     status: true,
@@ -48,5 +47,131 @@ export const SLogin = async (
         name: admin.name,
       },
     },
+  };
+};
+
+export const SRegister = async (
+  username: string,
+  password: string,
+  email: string,
+  name: string
+): Promise<IGlobalResponse<ILoginResponse>> => {
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const admin = await prisma.admin.create({
+    data: {
+      username,
+      password: hashedPassword,
+      email,
+      name,
+      isActive: true,
+      createAt: new Date(),
+      updateAt: new Date(),
+    },
+  });
+
+  const token = UGenerateToken({
+    id: admin.id,
+    username: admin.username,
+    email: admin.email,
+    name: admin.name,
+  });
+
+  return {
+    status: true,
+    message: "Register success",
+    data: {
+      token,
+      admin: {
+        id: admin.id,
+        username: admin.username,
+        email: admin.email,
+        name: admin.name,
+      },
+    },
+  };
+};
+
+export const SUpdate = async (
+  id: number,
+  username: string,
+  password: string,
+  email: string,
+  name: string
+): Promise<IGlobalResponse<IUpdateResponse>> => {
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const admin = await prisma.admin.update({
+    where: {
+      id,
+    },
+    data: {
+      username,
+      password: hashedPassword,
+      email,
+      name,
+      updateAt: new Date(),
+    },
+  });
+
+  return {
+    status: true,
+    message: "Update success",
+    data: {
+      admin: {
+        id: admin.id,
+        username: admin.username,
+        email: admin.email,
+        name: admin.name,
+      },
+    },
+  };
+};
+
+export const SDelete = async (
+  id: number
+): Promise<IGlobalResponse<IUpdateResponse>> => {
+  const admin = await prisma.admin.update({
+    where: {
+      id,
+    },
+    data: {
+      isActive: false,
+      deleteAt: new Date(),
+    },
+  });
+
+  return {
+    status: true,
+    message: "Delete success",
+    data: {
+      admin: {
+        id: admin.id,
+        username: admin.username,
+        email: admin.email,
+        name: admin.name,
+      },
+    },
+  };
+};
+
+export const SGetAll = async (): Promise<IGlobalResponse<IGetAllResponse[]>> => {
+  const admin = await prisma.admin.findMany({
+    where: {
+      isActive: true,
+      deleteAt: null,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      name: true,
+    },
+  });
+
+  return {
+    status: true,
+    message: "Get all success",
+    data: admin,
   };
 };
