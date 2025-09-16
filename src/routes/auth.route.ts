@@ -7,16 +7,36 @@ import {
   CUpdate,
 } from "../controllers/auth.controller";
 import { MValidate } from "../middlewares/error.middleware";
+import {
+  MCache,
+  MInvalidateCache,
+  CachePresets,
+} from "../middlewares/cache.middleware";
 
 const router = Router();
 
 // Bonus
-router.get("/", CGetAll); //Bonus - Cek data seluruhnya
+router.get("/", MCache(CachePresets.medium()), CGetAll); //Bonus - Cek data seluruhnya
 
 // Auth
 router.post("/login", Clogin);
-router.post("/create", CRegister); //Tugas#1 - sama aja register
-router.put("/:id", CUpdate); //Tugas#1 -  ini edit
-router.delete("/:id", CDelete); //Tugas#1 - ini hapus
+
+router.post(
+  "/create",
+  MInvalidateCache(["medium_cache:*", "user_cache:*"]),
+  CRegister
+); //Tugas#1 - sama aja register
+
+router.put(
+  "/:id",
+  MInvalidateCache(["medium_cache:*", "user_cache:*"]),
+  CUpdate
+); //Tugas#1 -  ini edit
+
+router.delete(
+  "/:id",
+  MInvalidateCache(["medium_cache:*", "user_cache:*"]),
+  CDelete
+); //Tugas#1 - ini hapus
 
 export default router;

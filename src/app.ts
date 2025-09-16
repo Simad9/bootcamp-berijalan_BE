@@ -1,7 +1,10 @@
 import express from "express";
 import cors from "cors";
-import { MErrorHandler, MValidate } from "./middlewares/error.middleware";
+import { MErrorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./routes/auth.route";
+import { connectRedis } from "./configs/redis.config";
+
+connectRedis();
 
 const app = express();
 
