@@ -12,6 +12,7 @@ import {
   MInvalidateCache,
   CachePresets,
 } from "../middlewares/cache.middleware";
+import { LoginSchema, RegisterSchema } from "../interfaces/auth.interface";
 
 const router = Router();
 
@@ -19,10 +20,11 @@ const router = Router();
 router.get("/", MCache(CachePresets.medium()), CGetAll); //Bonus - Cek data seluruhnya
 
 // Auth
-router.post("/login", Clogin);
+router.post("/login", MValidate(LoginSchema), Clogin);
 
 router.post(
   "/create",
+  MValidate(RegisterSchema),
   MInvalidateCache(["medium_cache:*", "user_cache:*"]),
   CRegister
 ); //Tugas#1 - sama aja register
@@ -33,8 +35,8 @@ router.put(
   CUpdate
 ); //Tugas#1 -  ini edit
 
-router.delete(
-  "/:id",
+router.put(
+  "/soft-delete/:id",
   MInvalidateCache(["medium_cache:*", "user_cache:*"]),
   CDelete
 ); //Tugas#1 - ini hapus

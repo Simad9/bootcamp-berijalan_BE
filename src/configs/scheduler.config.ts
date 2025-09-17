@@ -1,20 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import cron, { ScheduledTask } from "node-cron";
+import { CleanupResult } from "../interfaces/scheduler.interface";
 
 const jobs = new Map<string, ScheduledTask>();
 
 const prisma = new PrismaClient();
-
-export interface CleanupResult {
-  deleteCount: number;
-  message: string;
-  timestamp: Date;
-}
-
-export interface FullCleanupResult {
-  queueCleanup: CleanupResult;
-  cacheCleanup: boolean;
-}
 
 const createCronTask = (
   expression: string,

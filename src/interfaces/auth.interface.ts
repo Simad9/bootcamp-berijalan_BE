@@ -1,3 +1,5 @@
+import Joi from "joi";
+
 export interface ILoginResponse {
   token: string;
   admin: {
@@ -7,7 +9,6 @@ export interface ILoginResponse {
     name: string;
   };
 }
-
 
 export interface IUpdateResponse {
   admin: {
@@ -25,3 +26,14 @@ export interface IGetAllResponse {
   name: string;
 }
 
+// Tambahin Schema Untuk Validasi Joi
+export const RegisterSchema = Joi.object({
+  username: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
+export const LoginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+});
