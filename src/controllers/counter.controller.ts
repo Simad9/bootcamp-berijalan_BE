@@ -4,6 +4,7 @@ import {
   SDeleteCounter,
   SGetCounter,
   SGetCounters,
+  SSoftDeleteCounter,
   SUpdateCounter,
 } from "../services/counter.service";
 
@@ -57,8 +58,23 @@ export const CUpdateCounter = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { name, maxQueue } = req.body;
-    const result = await SUpdateCounter(Number(id), name, maxQueue);
+    const { isActive } = req.body;
+    const result = await SUpdateCounter(Number(id), isActive);
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const CSoftDeleteCounter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const result = await SSoftDeleteCounter(Number(id));
 
     res.status(200).json(result);
   } catch (error) {
@@ -80,3 +96,4 @@ export const CDeleteCounter = async (
     next(error);
   }
 };
+
