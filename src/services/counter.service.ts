@@ -104,16 +104,15 @@ export const SUpdateCounter = async (
   };
 };
 
+// service
 export const SUpdateStatusCounter = async (
   id: number,
-  status: boolean
+  updateData: Partial<{ isActive: boolean; deletedAt: Date | null }>
 ): Promise<IGlobalResponse<ICounterResponse>> => {
   const counter = await prisma.counter.update({
-    where: {
-      id,
-    },
+    where: { id },
     data: {
-      isActive: status,
+      ...updateData,
       updatedAt: new Date(),
     },
   });
@@ -123,7 +122,8 @@ export const SUpdateStatusCounter = async (
     message: "Counter status updated successfully",
     data: counter,
   };
-}
+};
+
 
 export const SSoftDeleteCounter = async (
   id: number
