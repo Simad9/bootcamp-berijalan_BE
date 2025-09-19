@@ -60,6 +60,16 @@ export const SRegister = async (
   email: string,
   name: string
 ): Promise<IGlobalResponse<ILoginResponse>> => {
+  const existingUser = await prisma.admin.findFirst({
+    where: {
+      OR: [{ username }, { email }],
+    },
+  });
+
+  if (existingUser) {
+    throw new Error("Username atau email sudah digunakan");
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const admin = await prisma.admin.create({
@@ -135,6 +145,25 @@ export const SUpdate = async (
 export const SDelete = async (
   id: number
 ): Promise<IGlobalResponse<IUpdateResponse>> => {
+  const admin = await prisma.admin.delete({
+    where: {
+      id,
+    },
+  });
+
+  if (!admin) {
+    throw new Error("Admin not Found");
+  }
+
+  return {
+    status: true,
+    message: "Delete success",
+  };
+};
+
+export const SSoftDelete = async (
+  id: number
+): Promise<IGlobalResponse<IUpdateResponse>> => {
   const admin = await prisma.admin.update({
     where: {
       id,
@@ -144,6 +173,10 @@ export const SDelete = async (
       deleteAt: new Date(),
     },
   });
+
+  if (!admin) {
+    throw new Error("Admin not Found");
+  }
 
   return {
     status: true,
@@ -185,13 +218,12 @@ export const SGetAll = async (): Promise<
 
 export const SGetAdmin = async (
   id: number
-): Promise<
-  IGlobalResponse<IGetAllResponse>
-> => {
+): Promise<IGlobalResponse<IGetAllResponse>> => {
   const admin = await prisma.admin.findFirst({
     where: {
       isActive: true,
       deleteAt: null,
+      id,
     },
     select: {
       id: true,

@@ -5,6 +5,7 @@ import {
   SGetAll,
   SLogin,
   SRegister,
+  SSoftDelete,
   SUpdate,
 } from "../services/auth.service";
 
@@ -62,6 +63,21 @@ export const CDelete = async (
   try {
     const { id } = req.params;
     const result = await SDelete(Number(id));
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const CSoftDelete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const result = await SSoftDelete(Number(id));
 
     res.status(200).json(result);
   } catch (error) {
