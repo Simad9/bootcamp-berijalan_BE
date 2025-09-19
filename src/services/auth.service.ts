@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { IGlobalResponse } from "../interfaces/global.interface";
 import { IGetAllResponse, ILoginResponse, IUpdateResponse } from "../interfaces/auth.interface";
-import { UGenerateToken } from "../utils/UGenerateToken";
+import { UGenerateToken } from "../utils/jwt.utils";
 
 const prisma = new PrismaClient();
 
