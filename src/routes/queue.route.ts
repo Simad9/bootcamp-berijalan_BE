@@ -13,10 +13,10 @@ import {
   CGetQueues,
   CNextCounterQueue,
   CReleaseQueue,
+  CResetQueue,
   CSkipCounterQueue,
   CUpdateQueue,
 } from "../controllers/queue.controller";
-import { SResetQueue } from "../services/queue.service";
 
 const router = Router();
 
@@ -26,7 +26,7 @@ router.post("/release", MInvalidateCache(["medium_cache:*"]), CReleaseQueue);
 router.get("/current", MCache(CachePresets.medium()), CCurrentQueue);
 router.get("/next/:counter_id", MCache(CachePresets.medium()), CNextCounterQueue);
 router.get("/skip/:counter_id", MCache(CachePresets.medium()), CSkipCounterQueue);
-router.get("/reset", MInvalidateCache(["medium_cache:*"]), SResetQueue);
+router.get("/reset", MInvalidateCache(["medium_cache:*"]), CResetQueue);
 
 // CRUD ~ Tugas#3
 router.get("/", MCache(CachePresets.medium()), CGetQueues);

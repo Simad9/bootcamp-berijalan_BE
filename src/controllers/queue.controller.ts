@@ -167,8 +167,7 @@ export const CResetQueue = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { counter_id } = req.params;
-    const result = await SResetQueue(Number(counter_id));
+    const result = await SResetQueue();
 
     res.status(200).json(result);
   } catch (error) {

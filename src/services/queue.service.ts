@@ -371,11 +371,9 @@ export const SSkipCounterQueue = async (
   };
 };
 
-export const SResetQueue = async (
-  counterId?: number
-): Promise<IGlobalResponse> => {
+export const SResetQueue = async (): Promise<IGlobalResponse> => {
   // reset queue
-  await prisma.queue.updateMany({
+  const updatedQueue = await prisma.queue.updateMany({
     where: {
       status: { in: ["called", "scaled", "skipped"] },
     },
@@ -386,10 +384,8 @@ export const SResetQueue = async (
   });
 
   // set counter jadi 0, dan queus nya 0 juga
-  await prisma.counter.updateMany({
-    where: {
-      id: counterId,
-    },
+  const updatedCounters = await prisma.counter.updateMany({
+    where: {},
     data: {
       currentQueue: 0,
       queues: 0,
@@ -400,5 +396,9 @@ export const SResetQueue = async (
   return {
     status: true,
     message: "Reset queue success",
+    data: {
+      updatedQueue,
+      updatedCounters,
+    },
   };
 };
