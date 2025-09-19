@@ -83,14 +83,16 @@ export const SCreateCounter = async (
 
 export const SUpdateCounter = async (
   id: number,
-  isActive: boolean
+  name: string,
+  maxQueue: number
 ): Promise<IGlobalResponse<ICounterResponse>> => {
   const counter = await prisma.counter.update({
     where: {
       id,
     },
     data: {
-      isActive,
+      name,
+      maxQueue,
       updatedAt: new Date(),
     },
   });
@@ -101,6 +103,27 @@ export const SUpdateCounter = async (
     data: counter,
   };
 };
+
+export const SUpdateStatusCounter = async (
+  id: number,
+  status: boolean
+): Promise<IGlobalResponse<ICounterResponse>> => {
+  const counter = await prisma.counter.update({
+    where: {
+      id,
+    },
+    data: {
+      isActive: status,
+      updatedAt: new Date(),
+    },
+  });
+
+  return {
+    status: true,
+    message: "Counter status updated successfully",
+    data: counter,
+  };
+}
 
 export const SSoftDeleteCounter = async (
   id: number

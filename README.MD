@@ -72,3 +72,10 @@ npm run test:coverage
 ## 📄 License
 
 MIT License
+
+---
+
+## My Notes / Catatku
+
+Catatanku bisa di klik di sini [Catatan](Catatan.MD) \
+Dokumentasi API via Postman yang dibuat [Dokumentasi](https://documenter.getpostman.com/view/30150423/2sB3HtEGZa) 

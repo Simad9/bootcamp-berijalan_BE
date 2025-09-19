@@ -12,6 +12,7 @@ import {
   CGetCounters,
   CSoftDeleteCounter,
   CUpdateCounter,
+  CUpdateStatusCounter,
 } from "../controllers/counter.controller";
 
 const router = Router();
@@ -23,16 +24,18 @@ router.get("/", MCache(CachePresets.medium()), CGetCounters);
 router.get("/:id", MCache(CachePresets.medium()), CGetCounter);
 //tugas#2 ~ create counter
 router.post("/", MInvalidateCache(["medium_cache:*"]), CCreateCounter);
-//tugas#2 ~ update active / inactive
+//tugas#2 ~ update counter
 router.put("/:id", MInvalidateCache(["medium_cache:*"]), CUpdateCounter);
+//tugas#2 ~ update status
+router.put("/:id/status", MInvalidateCache(["medium_cache:*"]), CUpdateStatusCounter);
+//tugas#2 ~ delete counter
+router.delete("/:id", MInvalidateCache(["medium_cache:*"]), CDeleteCounter);
 //tugas#2 ~ Disable
 router.put(
   "/soft-delete/:id",
   MInvalidateCache(["medium_cache:*"]),
   CSoftDeleteCounter
 );
-//tugas#2 ~ delete counter
-router.delete("/:id", MInvalidateCache(["medium_cache:*"]), CDeleteCounter);
 
 // Bonus
 router.get("/counter-first", MCache(CachePresets.medium()), CGetCounter);

@@ -1,7 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { IGlobalResponse } from "../interfaces/global.interface";
-import { IGetAllResponse, ILoginResponse, IUpdateResponse } from "../interfaces/auth.interface";
+import {
+  IGetAllResponse,
+  ILoginResponse,
+  IUpdateResponse,
+} from "../interfaces/auth.interface";
 import { UGenerateToken } from "../utils/jwt.utils";
 
 const prisma = new PrismaClient();
@@ -155,7 +159,10 @@ export const SDelete = async (
   };
 };
 
-export const SGetAll = async (): Promise<IGlobalResponse<IGetAllResponse[]>> => {
+// Untuk Admin
+export const SGetAll = async (): Promise<
+  IGlobalResponse<IGetAllResponse[]>
+> => {
   const admin = await prisma.admin.findMany({
     where: {
       isActive: true,
@@ -172,6 +179,35 @@ export const SGetAll = async (): Promise<IGlobalResponse<IGetAllResponse[]>> => 
   return {
     status: true,
     message: "Get all success",
+    data: admin,
+  };
+};
+
+export const SGetAdmin = async (
+  id: number
+): Promise<
+  IGlobalResponse<IGetAllResponse>
+> => {
+  const admin = await prisma.admin.findFirst({
+    where: {
+      isActive: true,
+      deleteAt: null,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      name: true,
+    },
+  });
+
+  if (!admin) {
+    throw new Error("Data Admin not found");
+  }
+
+  return {
+    status: true,
+    message: "Get admin success",
     data: admin,
   };
 };
