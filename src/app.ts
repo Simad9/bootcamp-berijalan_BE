@@ -19,6 +19,6 @@ app.use("/api/v1/queue", ququeRoutes);
 
 app.use(MErrorHandler);
 
-app.listen(3000, () => {
-  console.log("Server running in http://localhost:3000");
+app.listen(8080, () => {
+  console.log("Server running in http://localhost:8080");
 });
